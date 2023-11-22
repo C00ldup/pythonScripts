@@ -12,7 +12,7 @@ def createTable():
         con.commit()
         con.close()
     except:
-        print()
+        None
 
 def insertRecord(id, title, publishedDate, link):
     con = sqlite3.connect('ansa.db')

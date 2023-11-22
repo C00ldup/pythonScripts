@@ -3,24 +3,34 @@ import feedparser
 import re
 import database
 
-url = "https://www.ansa.it/sito/notizie/cronaca/cronaca_rss.xml"
-feeds = feedparser.parse(url)
+def getAnsaRecord():
+    url = "https://www.ansa.it/sito/notizie/cronaca/cronaca_rss.xml"
+    feeds = feedparser.parse(url)
 
-database.createTable()
+    database.createTable()
 
-for feed in feeds.entries:
-    if database.recordExist(feed.id) is None:
-        text = f"Title: {feed.title}\nSummary: {feed.summary}\nLink: {feed.link}"
-        '''
-        print("id: "+feed.id)
-        print("title: "+feed.title)
-        print("summary: "+feed.summary)
-        print("published: "+feed.published)
-        print("link: "+feed.link)
-        '''
-        database.insertRecord(feed.id, feed.title, feed.published, feed.link)
+    for feed in feeds.entries:
+        if database.recordExist(feed.id) is None:
+            text = f"Title: {feed.title}\nSummary: {feed.summary}\nLink: {feed.link}"
+            '''
+            print("id: "+feed.id)
+            print("title: "+feed.title)
+            print("summary: "+feed.summary)
+            print("published: "+feed.published)
+            print("link: "+feed.link)
+            '''
+            database.insertRecord(feed.id, feed.title, feed.published, feed.link)
 
-return text
+    try:
+        return text
+    except:
+        return None
+'''
+# example
+giovanni=getAnsaRecord()
+if giovanni != None:
+    print(giovanni)
+'''
 #database.selectAll()
 '''
 print("id: "+feeds.entries[1].id)
