@@ -82,7 +82,8 @@ def convertText(text, style):
             result += " "
         if style == 9 and i == " ":  # Widen the spaces between the blue words.
             result += " "
-    print(result)
+    #print(result)
+    return result
 
 def formatter():
     text = input("Enter text: ")
