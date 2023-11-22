@@ -2,6 +2,7 @@
 import feedparser
 import re
 import database
+from textFormatter import convertText
 
 def getAnsaRecord():
     url = "https://www.ansa.it/sito/notizie/cronaca/cronaca_rss.xml"
@@ -11,7 +12,8 @@ def getAnsaRecord():
 
     for feed in feeds.entries:
         if database.recordExist(feed.id) is None:
-            text = f"Title: {feed.title}\nSummary: {feed.summary}\nLink: {feed.link}"
+            #text = f"Title: {feed.title}\nSummary: {feed.summary}\nLink: {feed.link}"
+            text = f"{convertText(feed.title, 1)}\n{convertText(feed.summary, 2)}\n{feed.link}"
             '''
             print("id: "+feed.id)
             print("title: "+feed.title)
@@ -25,6 +27,7 @@ def getAnsaRecord():
         return text
     except:
         return None
+#print(getAnsaRecord())
 '''
 # example
 giovanni=getAnsaRecord()
