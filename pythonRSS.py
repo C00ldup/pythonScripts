@@ -3,31 +3,52 @@ import feedparser
 import re
 import database
 from textFormatter import convertText
+import random
 
-def getAnsaRecord():
-    url = "https://www.ansa.it/sito/notizie/cronaca/cronaca_rss.xml"
+def feeds():
+    url = ["https://www.ansa.it/sito/notizie/cronaca/cronaca_rss.xml",
+           "https://rss.csmonitor.com/feeds/usa",
+           "https://feeds.nbcnews.com/feeds/topstories",
+           "https://feeds.nbcnews.com/feeds/worldnews",
+           "https://www.newyorker.com/feed/news",
+           "https://www.latimes.com/nation/rss2.0.xml",
+           "https://feeds.washingtonpost.com/rss/rss_election-2012",
+           "https://feeds.nbcnews.com/feeds/nbcpolitics",
+           "https://feeds.feedburner.com/TechCrunch/Gaming",
+           "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+           "https://www.smh.com.au/rss/world.xml",
+           "https://www.smh.com.au/rss/technology.xml"]
+    return random.choice(url)
+
+def getAnsaRecord(url):
     feeds = feedparser.parse(url)
-
+    
     database.createTable()
 
     for feed in feeds.entries:
         if database.recordExist(feed.id) is None:
-            #text = f"Title: {feed.title}\nSummary: {feed.summary}\nLink: {feed.link}"
-            text = f"{convertText(feed.title, 1)}\n{convertText(feed.summary, 2)}\n{feed.link}"
-            '''
-            print("id: "+feed.id)
-            print("title: "+feed.title)
-            print("summary: "+feed.summary)
-            print("published: "+feed.published)
-            print("link: "+feed.link)
-            '''
+            title = convertText(feed.title, 1)
+            summary = convertText(feed.summary, 2)
+            link = feed.link
+            
+            text = f"{title}\n{summary}\n{link}"
+            
+            while len(title)+len(summary)+len(link) >= 220:
+                if len(summary)>0:
+                    summary = summary[:len(summary)-1]
+                    text = f"{title}\n{(summary)}...\n{link}"
+                else:
+                    title = title[:len(title)-1]
+                    text = f"{title}...\n{link}"
+                print(summary)
+            
             database.insertRecord(feed.id, feed.title, feed.published, feed.link)
 
     try:
         return text
     except:
         return None
-#print(getAnsaRecord())
+print(getAnsaRecord(feeds()))
 '''
 # example
 giovanni=getAnsaRecord()
